@@ -54,12 +54,12 @@ type Employee =
 ```csharp
 public class Employee
 {
-    public Guid Id { get; private set; }
-    public string Name { get; private set; }
-    public string Email { get; private set; }
-    public string Phone { get; private set; }
-    public bool HasAccessToSomething { get; private set; }
-    public bool HasAccessToSomethinElse { get; private set; }
+    public Guid Id { get; }
+    public string Name { get; }
+    public string Email { get; }
+    public string Phone { get; }
+    public bool HasAccessToSomething { get; }
+    public bool HasAccessToSomethinElse { get; }
 
     public Employee(Guid id, string name, string email, string phone, bool hasAccessToSmth, bool hasAccessToSmthElse)
     {
