@@ -269,10 +269,10 @@ B() |> GetBodyAsync |> Async.RunSynchronously // 2
 Вместо того, чтобы писать бесконечные
 ```fsharp
 let res arg =
-    match doJob with
+    match doJob arg with
     | Error e -> Error e
     | Ok r ->
-        match doJob2 with
+        match doJob2 r with
         | Error e -> Error e
         | Ok r -> ...
 ```
