@@ -218,6 +218,7 @@ let getReport queryData =
     use connection = getConnection()
     queryData
     |> DataRepository.get connection // зависимость от коннекшна мы внедряем в функцию, а не в конструктор
+    // и вот нам уже не нужно следить за lifestyle'ом зависимостей в огромном дереве
     |> Report.build
 ```
 Для тех, кто не знаком с оператором `|>` и каррированием, это равносильно следующему коду:
