@@ -215,27 +215,34 @@ else
 Простой сценарий выглядит примерно так:
 ```fsharp
 let getReport queryData =
+    use connection = getConnection()
     queryData
-    |> DataRepository.get
+    |> DataRepository.get connection // зависимость от коннекшна мы внедряем в функцию, а не в конструктор
     |> Report.build
 ```
 Для тех, кто не знаком с оператором `|>` и каррированием, это равносильно следующему коду:
 ```fsharp
 let gerReport queryData =
-    Report.build(DataRepository.get(queryData))
+    use connection = getConnection()
+    Report.build(DataRepository.get connection queryData)
 ```
 На C#:
 ```csharp
 public ReportModel GetReport(QueryData queryData)
 {
-    // Report здесь -- статический класс. В него компилируются F# модули
-    return Report.Build(DataRepository.Get(queryData));
+    using(var connection = GetConnection())
+    {
+        // Report здесь -- статический класс. В него компилируются F# модули
+        return Report.Build(DataRepository.Get(connection, queryData));
+    }
 }
 ```
 
 А поскольку функции прекрасно композируются, можно написать вообще вот так:
 ```fsharp
-let getReport = DataRepository.get >> Report.build
+let getReport =
+    use connection = getConnection()
+    DataRepository.get connection >> Report.build
 ```
 
 Заметьте, тестировать `Report.build` теперь проще некуда. Вам моки не нужны вообще. Более того, есть фреймворк `FsCheck`, который генерирует сотни входных параметров и запускает с ними ваш метод, и показывает данные, на которых метод сломался. Все, что вам нужно сделать -- 1 раз написать генератор для вашего типа. Чем это лучше написания моков? Генератор универсален, он подходит для **всех** будущих тестов, и вам не нужно знать имплементацию чего бы то ни было, для того, чтобы его написать.
