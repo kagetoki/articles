@@ -274,7 +274,7 @@ public ReportModel GetReport(QueryData queryData)
 let getReport qyertData =
     use connection = getConnection()
     queryData
-    |> DataRepository.get connection >> Report.build
+    |> (DataRepository.get connection >> Report.build)
 ```
 
 Заметьте, тестировать `Report.build` теперь проще некуда. Вам моки не нужны вообще. Более того, есть фреймворк `FsCheck`, который генерирует сотни входных параметров и запускает с ними ваш метод, и показывает данные, на которых метод сломался. Пользы от таких тестов несравнимо больше, они действительно проверяют на прочность вашу систему, юнит-тесты ее скорее неуверенно щекочут. 
