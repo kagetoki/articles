@@ -123,7 +123,7 @@ In the clever books they say that exceptions are for the exceptional, unpredicta
 
 Same thing goes for validation. User provided wrong data? **What a surprise.**
 
-The reason for this dramatic abusing of exceptions is simple: the type system isn't powerful enough to represent a scenario like "If everything's fine then give me a result, otherwise return an error". Strict typing requires us to return the same type in every execution branch (thank god). But adding `string ErrorMessage` & `IsSuccess` to all of our models is the last thing we need. Therefore in C# reality exceptions is probably the lesser evil. Of course you could do something like this:
+The reason for this dramatic abusing of exceptions is simple: the type system isn't powerful enough to represent a scenario like "If everything's fine then give me a result, otherwise return an error". Strict typing requires us to return the same type in every execution branch (fortunately). But adding `string ErrorMessage` & `IsSuccess` to all of our models is the last thing we need. Therefore in C# reality exceptions is probably the lesser evil. Of course you could do something like this:
 ```csharp
 public class Result<TResult, TError>
 {
