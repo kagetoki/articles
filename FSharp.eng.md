@@ -69,7 +69,7 @@ public class Employee
 }
 ```
 
-Done! Although, the amount of code increased three times - all the fields are repeated twice. More than that, should we add a new field we can easily forget to add it to constructor parameters and/or initialize it, and *compiler won't say anything* to us.
+Done! Although, the amount of code has tripled - all the fields are repeated twice. More than that, should we add a new field we can easily forget to add it to constructor parameters and/or initialize it, and *compiler won't say anything*.
 In F# on the other hand when we add a new field all we have to do is to add it. That's it. And initialization looks like this:
 ```fsharp
 let employee =
@@ -82,7 +82,7 @@ let employee =
 ```
 And if we miss a field the code won't compile.
 Since this objects are immutable the only way to make a change is to create another one. But what if we need to change just one field?
-Nothing easier!
+Piece of cake!
 ```fsharp
 let employee2 = { employee with Name = "Bob" }
 ```
@@ -113,7 +113,7 @@ if employee1 = employee2 then
 ```
 And this code would do *exactly* what we meant by that - real equality. `Equals` that compares objects by reference *is a pure garbage*, we've already got `Object.ReferenceEquals`, thanks.
 
-One could argue that no one needs it, since in real life projects we compare objects so rarely, that it's no big deal to override `Equals` & `GetHashCode` manually. But I think that cause-effect relationship is going backwards here: we don't compare regular objects because manual overriding and *maintaining* of `Equals` and `Compare` is to expensive. However when it comes for free, the use can be found immediately: you can put them into `HashSet` or `SortedSet`, use them as a key in `Dictionary` and don't bother comparing objects by their ids, but just compare them (although id option is still available of course).
+One could argue that no one needs it, since in real life projects we compare objects so rarely, that it's no big deal to override `Equals` & `GetHashCode` manually. But I think that cause-effect relationship is going backwards here: we don't compare regular objects because manual overriding and *maintaining* of `Equals` and `Compare` takes enormous effort. However when it comes for free, the use can be found immediately: you can put them into `HashSet` or `SortedSet`, use them as a key in `Dictionary` and don't bother comparing objects by their ids, but just compare them (although id option is still available of course).
 
 ## Discriminated Unions
 
@@ -123,7 +123,7 @@ In the clever books they say that exceptions are for the exceptional, unpredicte
 
 Same thing goes for validation. User provided wrong data? **What a surprise.**
 
-The reason for this dramatic abusing exceptions is simple: the type system isn't powerful enough to represent a scenario like "If everything's fine then give me a result, otherwise return an error". Strict typing requires us to return the same type in every execution branch (thank god). But adding `string ErrorMessage` & `IsSuccess` to all of our models is the last thing we need. Therefore in C# reality exceptions is probably the lesser evil. Of course you could do something like this:
+The reason for this dramatic abusing of exceptions is simple: the type system isn't powerful enough to represent a scenario like "If everything's fine then give me a result, otherwise return an error". Strict typing requires us to return the same type in every execution branch (thank god). But adding `string ErrorMessage` & `IsSuccess` to all of our models is the last thing we need. Therefore in C# reality exceptions is probably the lesser evil. Of course you could do something like this:
 ```csharp
 public class Result<TResult, TError>
 {
@@ -153,7 +153,7 @@ let validateAndExecute input =
 
 It's that simple, concise and most importantly, the code is self-documented. You don't have to write xml doc and specify that method throws an exception on some scenarios, you don't have to wrap other method calls with `try/catch` just in case. In this kind of type system exceptions occur in truly dangerous and wrong situations.
 
-When you throw exceptions here and there all the time you need a sophisticated error handling. Now you get yourself a `BusinessException` or an `ApiException`, then you have to inherit tons of exceptions from it and keep tracking that everyone is using those right exceptions, and if someone makes mistake - clients will get `500` instead of `404` or `403`. Now you've got a tideous logs reading ahead of you and digging through stacktraces.
+When you throw exceptions here and there all the time you need a sophisticated error handling. Now you get yourself a `BusinessException` or an `ApiException`, then you have to inherit tons of exceptions from it and keep tracking that everyone is using those right exceptions, and if someone makes mistake - clients will get `500` instead of `404` or `403`. Now you've got a tedious logs reading and digging through stacktraces ahead of you.
 
 F# compiler gives a warning if we didn't go through all the cases in `match` expression. Which is very convenient when you add a new case to your DU. In DU we *define scenarios*, for instance:
 ```fsharp
@@ -203,11 +203,11 @@ In C# you have ternary operator which does the same thing, but it's also quite e
 
 ## Away from familiar OOP
 
-Standard case: you've got a service, which depends on a few other services and a repository. Those services have dependencies of their own. Now all that gets squeezed together in a tight sausage of functionality with a mighty DI framework and handed over to a web controller.
+Common case: you've got a service, which depends on a few other services and a repository. Those services have dependencies of their own. Now all that gets mixed together in a nasty cocktail of functionality with a mighty DI framework and handed over to a web controller.
 
-Each dependency of that service has in average 2-5 dependencies, and each of them, including our guy, has in average 3-5 methods. Most of them aren't used in every specific scenario, of course. Out of all this giant method tree in every specific case we need 1-2 methods of every (?) dependency, but anyway we tie it all together and create a lot of objects. And mocks, of course. What would you think? We do have to test all this beauty, don't we? So now I want to test a method of my service. In order to call it, I need an object of that service. And to create that object I have to pass the mocks. The trick is to know what specific mocks I need: some of those mocks aren't being called here, so I don't need them, others are, but just a couple of their methods. So every time I've got myself a tideous setup for my test with specifying return values and all that stuff. Then I want to test another case *in the same method*. Setup again! Sometimes there's more code in tests for a method, than in the method itself. Oh, and yes, *for every other method* I have to dig inside it's guts and take a look on what specific dependencies I'm gonna need this time. By the way there goes encapsulation.
+Each dependency of that service has 2-5 dependencies in average, and each of them, including our guy, has 3-5 methods in average. Most of them aren't used in every specific scenario, of course. Out of all this giant method tree in every specific case we need 1-2 methods of every (?) dependency, but anyway we tie it all together and create a lot of objects. And mocks, of course. What would you think? We do have to test all this beauty, don't we? So now I want to test a method of my service. In order to call it, I need an object of that service. And to create that object I have to pass the mocks. The trick is to know what specific mocks I need: some of those mocks aren't being called here, so I don't need them, others are, but just a couple of their methods. So every time I've got myself a tedious setup for my test with specifying return values and all that stuff. Then I want to test another case *in the same method*. Setup again! Sometimes there's more code in tests for a method, than in the method itself. Oh, and yes, *for every other method* I have to dig inside its guts and take a look on what specific dependencies I'm gonna need this time. By the way there goes encapsulation.
 
-And it kicks us in other ways too: whenever I need just 1 method of some service, I have to satisfy all of it's dependencies, even if I don't actually need them. Of course it's being handled by DI frameworks, but still I have to go and register all of them. Often it can be a problem, if some of those dependencies declared in another assembly and now we have to reference it. In some cases it can screw our architecture up, so now we have to mess with inheritance or move some piece of code to a separate service, by that increasing the number of components in our system. Doable of course, but still quite unpleasant.
+And it kicks us in other ways too: whenever I need just 1 method of some service, I have to satisfy all of its dependencies, even if I don't actually need them. Of course it's being handled by DI frameworks, but still I have to go and register all of them. Often it can be a problem, if some of those dependencies declared in another assembly and now we have to reference it. In some cases it can screw our architecture up, so now we have to mess with inheritance or move some piece of code to a separate service, increasing the number of components in our system. Doable of course, but still quite unpleasant.
 
 In functional world it's being done in a different way. The coolest guy here is pure function, not an object. And mostly we deal with immutable values, not mutable variables. Besides, functions can be easily composed, so in most cases we don't even need *objects* of services at all. A repository gets from DB something you need? Well then get it and pass that value, not the repo itself!
 
@@ -314,9 +314,9 @@ let res arg =
 ```
 
 Now in every line with `let!` in case of `Error e` we return error. If everything is ok, we return that very thing `Ok r3`.
-And you can do things like that *for anything* including custom operations with custom names. It's a great field for making a DSL.
+And you can do things like that *for anything* including custom operations with custom names. It's a great tool for making a DSL.
 
-By the way there's this thing for asynchronous programming, even two of them - `task` & `async`. The first one is for familiar tasks, the second one -- for working with `Async` class. This thing is from F#, main difference from task is that is has a cold start, but it also has an integration with Tasks API. You can build complex async workflows with parallel and/or cascade execution and run them only when they're ready. Just like this:
+By the way there's a thing like that for asynchronous programming, even two of them - `task` & `async`. The first one is for familiar tasks, the second one -- for working with `Async` class. This thing is from F#, main difference from task is that is has a cold start, but it also has an integration with Tasks API. You can build complex async workflows with parallel and/or cascade execution and run them only when they're ready. Just like this:
 ```fsharp
 let myTask =
     task {
