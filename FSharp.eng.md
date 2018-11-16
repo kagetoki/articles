@@ -119,7 +119,7 @@ One could argue that no one needs it, since in real life projects we compare obj
 
 I suppose most of us have learned at our first teamlead's knees, that building a workflow on exceptions is wrong. For instance, instead of using `try { i = Convert.ToInt32("5"); } catch(Exception){}` it's better to use `int.TryParse`. But besides this primitive and decrepit example we constantly break this rule. User provided crooked up input? `ValidationException`! Out of array's bounds? `IndexOutOfRangeException`!
 
-In the clever books they say that exceptions are for the exceptional, unpredicted situations, when something has gone wrong so badly that trying to continue our work doesn't make sense at all. Good examples are `OutOfMemoryException`, `StackOverflowException`, `AccessViolationException` and so on. But getting out of bounds in array is unpredictable? Really? I mean the indexer gets `Int32` as input, which has 2^32 possible values. In most cases arrays we work with don't exceed 10000 length. Rarely a million. Which means that there are **far more** values of `int` that cause exception than the ones that work correctly. Which means that given a random value of `int` it's far more likely to get into exceptional situation, than the normal one! Now, I know no one uses random index in arrays, everyone checks their length and so on. And no wonder! Still it's pretty representative. Imagine that we are talking about some abstract function that handles input of some type, but then you find out that **most** of those values cause an exception. Kinda annoying, isn't it?
+In the clever books they say that exceptions are for the exceptional, unpredictable situations, when something has gone wrong so badly that trying to continue our work doesn't make sense at all. Good examples are `OutOfMemoryException`, `StackOverflowException`, `AccessViolationException` and so on. But getting out of bounds in array is unpredictable? Really? I mean the indexer gets `Int32` as input, which has 2^32 possible values. In most cases arrays we work with don't exceed 10000 length. Rarely a million. Which means that there are **far more** values of `int` that cause exception than the ones that work correctly. Which means that given a random value of `int` it's far more likely to get into exceptional situation, than the normal one! Now, I know no one uses random index in arrays, everyone checks their length and so on. And no wonder! Still it's pretty representative. Imagine that we are talking about some abstract function that handles input of some type, but then you find out that **most** of those values cause an exception. Kinda annoying, isn't it?
 
 Same thing goes for validation. User provided wrong data? **What a surprise.**
 
@@ -217,7 +217,7 @@ let getReport queryData =
     use connection = getConnection()
     queryData
     |> DataRepository.get connection // connection dependency is being injected in function, not in constructor
-    // and now we don't need keep tracking on lifesycle of dependencies
+    // and now we don't need keep tracking on lifecycle of dependencies
     |> Report.build
 ```
 For those who's unfamiliar with `|>` operator and currying, this is equivalent to the following code:
