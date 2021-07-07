@@ -43,6 +43,7 @@ type Employee =
 { Id: Guid
   Name: string
   Email: string
+  Phone: string
   HasAccessToSomething: bool
   HasAccessToSomethingElse: bool }
 ```
